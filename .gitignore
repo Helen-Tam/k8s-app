@@ -6,7 +6,7 @@
 !.gitignore
 
 # Do not ignore image directory
-!/images/
+!images/**
 
 # But don't ignore folders
 !*/
