@@ -5,8 +5,8 @@
 # Do not ignore .gitignore
 !.gitignore
 
-# Do not ignore makefile
-!makefile
+# Do not ignore image directory
+!/images/
 
 # But don't ignore folders
 !*/
@@ -21,6 +21,7 @@
 !*.css
 !*.html
 !*.yaml
+!*Jenkinsfile
 
 # Enforce ignoring those
 **/.idea/
