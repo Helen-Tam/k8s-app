@@ -1,0 +1,44 @@
+# Ignore everything
+*
+*/*/*/.venv/
+
+# Do not ignore .gitignore
+!.gitignore
+
+# Do not ignore makefile
+!makefile
+
+# But don't ignore folders
+!*/
+
+# But don't ignore these specific file types (example: .txt and .md files)
+!*.txt
+!*.md
+!*.sh
+!*.c
+!*.h
+!*.py
+!*.css
+!*.html
+
+# Enforce ignoring those
+**/.idea/
+**/.vscode/
+**/.venv/
+**/venv/
+**/__pycache__/
+*.py[cod]
+*.log
+
+# Docker
+*.log
+*.tmp
+docker-compose.override.yml
+.docker/
+
+# Environment variables
+.env
+
+# Terraform
+*.tfstate
+*.tfstate.backup
