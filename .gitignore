@@ -20,6 +20,7 @@
 !*.py
 !*.css
 !*.html
+!*.yaml
 
 # Enforce ignoring those
 **/.idea/
@@ -39,6 +40,3 @@ docker-compose.override.yml
 # Environment variables
 .env
 
-# Terraform
-*.tfstate
-*.tfstate.backup
