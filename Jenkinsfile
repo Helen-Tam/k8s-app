@@ -106,8 +106,8 @@ spec:
             steps {
                 container('kubectl') {
                     sh """
-                    kubectl apply -f k8s/prod/app-deployment.yaml -n $PROD_NAMESPACE
-                    kubectl apply -f k8s/prod/app-service.yaml -n $PROD_NAMESPACE
+                    kubectl apply -f deployment/weather-app -n $PROD_NAMESPACE
+                    kubectl apply -f service/weather-app -n $PROD_NAMESPACE
                     """
                 }
             }
