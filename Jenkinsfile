@@ -52,7 +52,7 @@ spec:
 
         stage('Create Docker registry secret') {
             steps {
-                withCredentials([usernamePassword{
+                withCredentials([usernamePassword(
                     credentialsId: env.DOCKER_HUB_CREDS,
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
