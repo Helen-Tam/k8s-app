@@ -1,15 +1,13 @@
 pipeline {
     agent {
         kubernetes {
-            label 'k8s-agent'
-             defaultContainer 'jnlp'
+            label 'kaniko'
+             defaultContainer 'kaniko'
         }
     }
 
     environment {
-        DOCKER_HUB_CREDENTIALS = 'dockerhub-credentials'
         DOCKER_IMAGE = 'helentam93/k8s-app:latest'
-        DEV_NAMESPACE = 'devops'
         PROD_NAMESPACE = 'prod'
     }
 
@@ -21,28 +19,14 @@ pipeline {
             }
         }
 
-        stage('Build Docker image') {
+        stage('Build and push Docker image') {
             steps {
-                script {
-                    docker.build(env.DOCKER_IMAGE)
-                }
-            }
-        }
-
-        stage('Push the image to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: env.DOCKER_HUB_CREDENTIALS,
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    script {
-                        sh """
-                        echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
-                        docker push ${env.DOCKER_IMAGE}
-                        """
-                    }
-                }
+                sh """
+                /kaniko/executor \
+                  --dockerfile=Dockerfile \
+                  --context=\$(pwd) \
+                  --destination=${DOCKER_IMAGE}
+                  """
             }
         }
 
