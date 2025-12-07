@@ -34,7 +34,9 @@ spec:
 
   - name: kubectl
     image: bitnami/kubectl:latest
-    command: ["cat"]
+    command:
+      - sleep
+      - "99d"
     tty: true
     volumeMounts:
       - name: workspace-volume
@@ -89,11 +91,12 @@ spec:
         stage('Check deployment files') {
             steps {
                 container('kubectl') {
+                    sh 'kubectl version --client'
                     sh 'ls -R k8s/prod'
                 }
             }
         }
-        
+
         stage('Deploy to prod namespace') {
             steps {
                 container('kubectl') {
