@@ -105,10 +105,10 @@ spec:
         stage('Deploy to prod namespace') {
             steps {
                 container('kubectl') {
-                    sh '''
-                    kubectl apply -f k8s/prod/app-deployment.yaml -n ${env.PROD_NAMESPACE}
-                    kubectl apply -f k8s/prod/app-service.yaml -n ${env.PROD_NAMESPACE}
-                    '''
+                    sh """
+                    kubectl apply -f k8s/prod/app-deployment.yaml -n $PROD_NAMESPACE
+                    kubectl apply -f k8s/prod/app-service.yaml -n $PROD_NAMESPACE
+                    """
                 }
             }
         }
@@ -116,7 +116,7 @@ spec:
         stage('Get the web-app URL') {
             steps {
                 container('kubectl') {
-                    sh "kubectl get svc -n ${env.PROD_NAMESPACE}"
+                    sh "kubectl get svc -n $PROD_NAMESPACE"
                 }
             }
         }
