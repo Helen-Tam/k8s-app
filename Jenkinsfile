@@ -30,15 +30,15 @@ spec:
         mountPath: /var/lib/docker
       - name: workspace-volume
         mountPath: /home/jenkins/agent
-        
-    - name: kubectl
-      image: bitnami/kubectl:latest
-      command:
-      -cat
-      tty: true
-      volumeMounts:
-        - name: workspace-volume
-          mountPath: /home/jenkins/agent
+
+  - name: kubectl
+    image: bitnami/kubectl:latest
+    command:
+      - cat
+    tty: true
+    volumeMounts:
+      - name: workspace-volume
+        mountPath: /home/jenkins/agent
 
   volumes:
   - name: workspace-volume
