@@ -3,7 +3,7 @@ pipeline {
         kubernetes {
             label 'docker-agent'
             defaultContainer 'jnlp'
-            yaml """
+            yaml '''
 apiVersion: v1
 kind: Pod
 metadata:
@@ -44,7 +44,7 @@ spec:
     emptyDir: {}
   - name: docker-graph
     emptyDir: {}
-"""
+'''
         }
     }
 
@@ -88,11 +88,11 @@ spec:
         stage('Deploy to prod namespace') {
             steps {
                 container('kubectl') {
-                    sh """
+                    sh '''
                     set -e
                     kubectl apply -f k8s/prod/app-deployment.yaml -n ${env.PROD_NAMESPACE}
                     kubectl apply -f k8s/prod/app-service.yaml -n ${env.PROD_NAMESPACE}
-                    """
+                    '''
                 }
             }
         }
