@@ -35,6 +35,8 @@ spec:
     image: bitnami/kubectl:latest
     command:
       - cat
+    securityContext:
+      privileged: true
     volumeMounts:
       - name: workspace-volume
         mountPath: /home/jenkins/agent
