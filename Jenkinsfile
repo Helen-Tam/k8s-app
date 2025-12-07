@@ -101,7 +101,6 @@ spec:
                 container('kubectl') {
                     sh 'kubectl version --client'
                     sh 'ls -R k8s/prod'
-                    sh 'kubectl apply -f $WORKSPACE/k8s/prod/app-deployment.yaml -n prod'
                 }
             }
         }
@@ -109,10 +108,10 @@ spec:
         stage('Deploy to prod namespace') {
             steps {
                 container('kubectl') {
-                    sh '''
-                    kubectl set image deployment/weather-app weather-app=helentam93/k8s-app:latest -n $PROD_NAMESPACE
-                    kubectl rollout status deployment/weather-app -n $PROD_NAMESPACE
-                    '''
+                    sh 'kubectl apply -f $WORKSPACE/k8s/prod/app-deployment.yaml -n prod'
+                    sh 'kubectl set image deployment/weather-app weather-app=helentam93/k8s-app:latest -n prod'
+                    sh 'kubectl rollout status deployment/weather-app -n prod'
+                    sh 'kubectl apply -f $WORKSPACE/k8s/prod/app-service.yaml -n prod'
                 }
             }
         }
