@@ -105,9 +105,8 @@ spec:
             steps {
                 container('kubectl') {
                     sh '''
-                    kubectl apply -f deployment/weather-app weather-app=helentam93/k8s-app:latest -n $PROD_NAMESPACE
+                    kubectl set image deployment/weather-app weather-app=helentam93/k8s-app:latest -n $PROD_NAMESPACE
                     kubectl rollout status deployment/weather-app -n $PROD_NAMESPACE
-                    kubectl apply -f service/weather-app -n $PROD_NAMESPACE
                     '''
                 }
             }
