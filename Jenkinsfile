@@ -11,27 +11,27 @@ metadata:
     app: kaniko-agent
 spec:
   containers:
-    - name: jnlp
-      image: jenkins/inbound-agent:latest
-      volumeMounts:
-        - name: workspace-volume
-          mountPath: /home/jenkins/agent
-    - name: kaniko
-      image: gcr.io/kaniko-project/executor:latest
-      command:
-      - cat
-      tty: true
-      volumeMounts:
-        - name: workspace-volume
-          mountPath: /workspace
-        - name: kaniko-secret
-          mountPath: /kaniko/.docker
-    volumes:
-      - name: workspace-volume
-        emptyDir: {}
-      - name: kaniko-secret
-        secret:
-          secretName: docker-config
+  - name: jnlp
+    image: jenkins/inbound-agent:latest
+    volumeMounts:
+    - name: workspace-volume
+      mountPath: /home/jenkins/agent
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:latest
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - name: workspace-volume
+      mountPath: /workspace
+    - name: kaniko-secret
+      mountPath: /kaniko/.docker
+  volumes:
+  - name: workspace-volume
+    emptyDir: {}
+  - name: kaniko-secret
+    secret:
+      secretName: docker-config
 """
         }
     }
