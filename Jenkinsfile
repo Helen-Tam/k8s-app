@@ -61,7 +61,6 @@ spec:
 
     environment {
         DOCKER_IMAGE = 'docker.io/helentam93/k8s-app:latest'
-        PROD_NAMESPACE = 'prod'
     }
 
     stages {
