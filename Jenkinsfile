@@ -50,8 +50,11 @@ spec:
   - name: docker-graph
     emptyDir: {}
   - name: kubeconfig
-    hostPath:
-      path: /home/helen/.kube
+    configMap:
+      name: jenkins-kubeconfig
+      items:
+        - key: config
+          path: config
 '''
         }
     }
