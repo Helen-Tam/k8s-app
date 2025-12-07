@@ -68,3 +68,4 @@ pipeline {
         success { echo "The pipeline completed successfully!"}
         failure { echo "The pipeline failed!"}
     }
+}
