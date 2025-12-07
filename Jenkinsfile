@@ -50,7 +50,7 @@ spec:
     }
 
     environment {
-        DOCKER_HUB_CREDS = 'dockerhub-credentials'
+        DOCKER_HUB_CREDS = 'dockerhub-creds'
         DOCKER_IMAGE = 'docker.io/helentam93/k8s-app:latest'
         PROD_NAMESPACE = 'prod'
     }
@@ -66,7 +66,7 @@ spec:
             steps {
                 container('docker') {
                     withCredentials([usernamePassword(
-                        credentialsId: env.DOCKER_HUB_CREDS,
+                        credentialsId: 'dockerhub-creds',
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_PASS'
                     )]) {
