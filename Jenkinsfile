@@ -18,6 +18,9 @@ spec:
       mountPath: /home/jenkins/agent
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
+    command:
+    - /busybox/cat
+    tty: true
     volumeMounts:
     - name: workspace-volume
       mountPath: /workspace
@@ -53,7 +56,6 @@ spec:
                       --dockerfile=/workspace/Dockerfile \
                       --context=/workspace \
                       --destination=${DOCKER_IMAGE} \
-                      --insecure \
                       --skip-tls-verify
                     """
                 }
