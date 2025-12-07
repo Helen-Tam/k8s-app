@@ -72,8 +72,13 @@ spec:
 
         stage('Build and push the image') {
             steps {
-                container('jnlp') {
+                container('docker') {
                     sh """
+                    until docker info >/dev/null 2>&1; docker
+                        echo "Waiting for Docker daemon"
+                        sleep 2
+                    done
+                    
                     docker build -t ${DOCKER_IMAGE} .
                     docker push ${DOCKER_IMAGE}
                     """
