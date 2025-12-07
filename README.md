@@ -15,18 +15,18 @@ AWS EKS Architecture:
 
 Step-by-Step Implementation:
 1. Create an AWS EKS cluster with a node group with 2 nodes.
-    ![EKS](images/EKS.png)
+![EKS](images/EKS.png)
 2. Set Role to the node group with the next policies: EKSWorkerNodePolice, EC2ContainerRegistryReadOnly and EKS_CNI_Policy. 
-   ![Node Group Policies](images/node_policies.png)
+![Node Group Policies](images/node_policies.png)
 3. Check the Node creation:
    - kubectl get nodes
-   ![Nodes](images/get_nodes.png)
+![Nodes](images/get_nodes.png)
 4. Create "devops" and "prod" namespaces:
    - kubectl create namespace devops
    - kubectl create namespace prod
 5. Check the namespaces creation:
    - kubectl get ns
-   ![Namespaces](images/get_ns.png)
+![Namespaces](images/get_ns.png)
 6. Create the following files in the k8s/devops directory:
    - jenkins-devops-rbac.yaml (Jenkins permissions in devops namespace)
    - jenkins-pvc.yaml (persistent storage for Jenkins controller)
@@ -41,7 +41,7 @@ Step-by-Step Implementation:
   - kubectl apply -f jenkins-service.yaml
 8. Get the Jenkins URL and password: kubectl get svc -n devops
     - get the EXTERNAL_IP and enter the jenkins UI http://<EXTERNAL_IP>
-   ![Jenkins UI](images/get_svc_devops.png)
+![Jenkins UI](images/get_svc_devops.png)
 9. Get the Jenkins password:
     - kubectl get pods -n devops (get the pod name)
     - kubectl exec -n devops <pod_name> -- cat /var/jenkins_home/secrets/initialAdminPassword 
@@ -53,12 +53,12 @@ Step-by-Step Implementation:
      - Git plugin
      - pipeline utility plugin
 12. Set up Clouds in System Configuration:
-    ![Cloud](images/cloud_create.png)
+![Cloud](images/cloud_create.png)
     - Name: kubernetes
-    ![Cloud_name](images/kubernetes.png)
+![Cloud_name](images/kubernetes.png)
     - Namespace: devops
     - Jenkins URL: http://<EXTERNAL_IP>:8080
-    ![url](images/jenkins_url.png)
+![url](images/jenkins_url.png)
 13. Configure Docker Hub credentials for storing and pulling Docker image of the web-app
     - Create an Access Token in the Docker Hub 
     - Create Global credentials in Jenkins controller (to pass it in the pipeline)
@@ -71,8 +71,8 @@ Step-by-Step Implementation:
     * can be changed for the webhook trigger later
 18. After the pipeline completed successfully, you can get the URL to access the web-app:
     - kubectl get svc -n prod
-    ![scv](images/svc_prod.png)
+![scv](images/svc_prod.png)
     - go to the http://<EXTERNAL_IP>
     - Enjoy the app =)
-    ![app](images/app.png)
+![app](images/app.png)
     
