@@ -16,29 +16,18 @@ spec:
     command:
     - cat
     tty: true
-    env:
-      - name: DOCKER_HOST
-        value: tcp://localhost:2375
     volumeMounts:
     - name: workspace-volume
       mountPath: /home/jenkins/agent
-  - name: docker
-    image: docker:24-dind
-    securityContext:
-      privileged: true
-    env:
-      - name: DOCKER_TLS_CERTDIR
-        value: ""
-    volumeMounts:
-    - name: docker-graph
-      mountPath: /var/lib/docker
-    - name: workspace-volume
-      mountPath: /home/jenkins/agent
+    - name: docker-sock
+      mountPath: /var/run/docker.sock
   volumes:
   - name: workspace-volume
     emptyDir: {}
-  - name: docker-graph
-    emptyDir: {}
+  - name: docker-sock
+    hostPath:
+      path: /var/run/docker.sock
+      type: File
 """
         }
     }
