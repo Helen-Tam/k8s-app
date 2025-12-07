@@ -10,6 +10,7 @@ metadata:
   labels:
     app: jenkins-docker-agent
 spec:
+  serviceAccountName: jenkins-admin
   containers:
   - name: jnlp
     image: jenkins/inbound-agent:latest
