@@ -106,7 +106,6 @@ spec:
             steps {
                 container('kubectl') {
                     sh '''
-                    set -e
                     kubectl apply -f k8s/prod/app-deployment.yaml -n ${env.PROD_NAMESPACE}
                     kubectl apply -f k8s/prod/app-service.yaml -n ${env.PROD_NAMESPACE}
                     '''
