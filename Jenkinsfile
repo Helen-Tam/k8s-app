@@ -13,7 +13,7 @@ spec:
   containers:
   - name: jnlp
     image: jenkins/inbound-agent:latest
-    args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
+    args: ['$(JENKINS_SECRET)', '$(JENKINS_NAME)']
     volumeMounts:
     - name: workspace-volume
       mountPath: /home/jenkins/agent
@@ -33,6 +33,8 @@ spec:
 
   - name: kubectl
     image: bitnami/kubectl:latest
+    command: ["cat"]
+    tty: true
     volumeMounts:
       - name: workspace-volume
         mountPath: /home/jenkins/agent
@@ -87,8 +89,9 @@ spec:
             steps {
                 container('kubectl') {
                     sh """
-                    kubectl apply -f deployment/weather-app -n ${env.PROD_NAMESPACE}
-                    kubectl apply -f service/weather-app -n ${env.PROD_NAMESPACE}
+                    set -e
+                    kubectl apply -f k8s/prod/app-deployment.yaml -n ${env.PROD_NAMESPACE}
+                    kubectl apply -f k8s/prod/app-service.yaml -n ${env.PROD_NAMESPACE}
                     """
                 }
             }
