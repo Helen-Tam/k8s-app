@@ -37,9 +37,7 @@ spec:
     }
 
     environment {
-        DOCKER_HUB_CREDS = 'dockerhub-credentials'
         DOCKER_IMAGE = 'helentam93/k8s-app:latest'
-        DEV_NAMESPACE = 'devops'
         PROD_NAMESPACE = 'prod'
     }
 
@@ -47,26 +45,6 @@ spec:
         stage('Clone the repo') {
             steps {
                 git branch: 'main', url: 'https://github.com/Helen-Tam/k8s-app.git'
-            }
-        }
-
-        stage('Create Docker registry secret') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: env.DOCKER_HUB_CREDS,
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    container('jnlp') {
-                        sh """
-                        kubectl create secret docker-registry docker-config \
-                          --docker-username=$DOCKER_USER \
-                          --docker-password=$DOCKER_PASS \
-                          --docker-server=https://index.docker.io/v1/ \
-                          -n ${DEV_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
-                        """
-                    }
-                }
             }
         }
 
