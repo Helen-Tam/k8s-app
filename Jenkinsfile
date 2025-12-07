@@ -89,10 +89,8 @@ spec:
             steps {
                 container('kubectl') {
                     sh """
-                    set -e
-                    kubectl apply -f k8s/prod/app-deployment.yaml -n ${env.PROD_NAMESPACE}
-                    kubectl apply -f k8s/prod/app-service.yaml -n ${env.PROD_NAMESPACE}
-                    kubectl rollout status deployment/app-deployment -n ${PROD_NAMESPACE} --timeout=120s
+                    kubectl apply -f deployment/weather-app -n ${env.PROD_NAMESPACE}
+                    kubectl apply -f service/weather-app -n ${env.PROD_NAMESPACE}
                     """
                 }
             }
