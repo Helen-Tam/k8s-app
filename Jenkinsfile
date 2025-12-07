@@ -32,13 +32,16 @@ spec:
         mountPath: /home/jenkins/agent
 
   - name: kubectl
-    image: sashak9/pod-agent:latest
+    image: heyvaldemar/aws-kubectl
     tty: true
     volumeMounts:
       - name: kubeconfig
         mountPath: /home/jenkins/.kube
       - name: workspace-volume
         mountPath: /home/jenkins/agent
+    env:
+    - name: AWS_REGION
+      value: eu-north-1
 
   volumes:
   - name: workspace-volume
