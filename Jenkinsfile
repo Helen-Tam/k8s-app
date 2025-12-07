@@ -19,8 +19,9 @@ spec:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
     command:
-    - /busybox/cat
-    tty: true
+    - tail
+    - -f
+    - /dev/null
     volumeMounts:
     - name: workspace-volume
       mountPath: /workspace
