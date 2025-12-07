@@ -12,7 +12,10 @@ metadata:
 spec:
   containers:
   - name: jnlp
-    image: jenkins/inbound-agent:latest
+    image: docker:24
+    command:
+    - cat
+    tty: true
     env:
       - name: DOCKER_HOST
         value: tcp://localhost:2375
@@ -28,7 +31,9 @@ spec:
         value: ""
     volumeMounts:
     - name: docker-graph
-      mountPath: /var/lib/dpcker
+      mountPath: /var/lib/docker
+    - name: workspace-volume
+      mountPath: /home/jenkins/agent
   volumes:
   - name: workspace-volume
     emptyDir: {}
