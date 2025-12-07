@@ -16,7 +16,7 @@ spec:
     args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
     env:
       - name: DOCKER_HOST
-        value: unix:///var/run/dockr.sock
+        value: unix:///var/run/docker.sock
     volumeMounts:
     - name: workspace-volume
       mountPath: /home/jenkins/agent
@@ -28,7 +28,6 @@ spec:
   - name: docker-sock
     hostPath:
       path: /var/run/docker.sock
-      type: File
 """
         }
     }
