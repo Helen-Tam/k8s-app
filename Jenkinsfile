@@ -1,32 +1,66 @@
 pipeline {
     agent {
         kubernetes {
-            label 'kaniko'
-            defaultContainer 'kaniko'
+            label 'kaniko-agent'
+            defaultContainer 'jnlp'
+            yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: kaniko-agent
+spec:
+  containers:
+    - name: jnlp
+      image: jenkins/inbound-agent:latest
+      volumeMounts:
+        - name: workspace-volume
+          mountPath: /home/jenkins/agent
+    - name: kaniko
+      image: gcr.io/kaniko-project/executor:latest
+      command:
+      - cat
+      tty: true
+      volumeMounts:
+        - name: workspace-volume
+          mountPath: /workspace
+        - name: kaniko-secret
+          mountPath: /kaniko/.docker
+    volumes:
+      - name: workspace-volume
+        emptyDir: {}
+      - name: kaniko-secret
+        secret:
+          secretName: docker-config
+"""
         }
     }
 
     environment {
         DOCKER_IMAGE = 'helentam93/k8s-app:latest'
+        DEV_NAMESPACE = 'devops'
         PROD_NAMESPACE = 'prod'
     }
 
     stages {
         stage('Clone the repo') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/Helen-Tam/k8s-app.git'
+                git branch: 'main', url: 'https://github.com/Helen-Tam/k8s-app.git'
             }
         }
 
         stage('Build and push Docker image') {
             steps {
-                sh """
-                /kaniko/executor \
-                  --dockerfile=Dockerfile \
-                  --context=\$(pwd) \
-                  --destination=${DOCKER_IMAGE}
-                  """
+                container('kaniko') {
+                    sh """
+                    /kaniko/executor \
+                      --dockerfile=/workspace/Dockerfile \
+                      --context=/workspace \
+                      --destination=${DOCKER_IMAGE} \
+                      --insecure \
+                      --skip-tls-verify
+                    """
+                }
             }
         }
 
@@ -34,16 +68,14 @@ pipeline {
             steps {
                 sh """
                 kubectl apply -f k8s/prod/app-deployment.yaml -n ${env.PROD_NAMESPACE}
-                kubectl apply -f k8s/prod/app-service.yaml} -n ${env.PROD_NAMESPACE}
+                kubectl apply -f k8s/prod/app-service.yaml -n ${env.PROD_NAMESPACE}
                 """
             }
         }
 
         stage('Get the web-app URL') {
             steps {
-                sh """
-                kubectl get svc -n ${env.PROD_NAMESPACE}
-                """
+                sh "kubectl get svc -n ${env.PROD_NAMESPACE}"
             }
         }
     }
