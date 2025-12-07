@@ -16,19 +16,29 @@ spec:
     args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
     env:
       - name: DOCKER_HOST
-        value: unix:///var/run/docker.sock
+        value: tcp://docker:2375
     volumeMounts:
     - name: workspace-volume
       mountPath: /home/jenkins/agent
-    - name: docker-sock
-      mountPath: /var/run/docker.sock
+  - name: docker
+    image: docker:24-dind
+    securityContext:
+      privileged: true
+    env:
+      - name: DOCKER_TLS_CERTDIR
+        value: ""
+    ports:
+      - containerPort: 2375
+    volumeMounts:
+      - name: docker-graph
+        mountPath: /var/lib/docker
+      - name: workspace-volume
+        mountPath: /home/jenkins/agent
   volumes:
   - name: workspace-volume
     emptyDir: {}
-  - name: docker-sock
-    hostPath:
-      path: /var/run/docker.sock
-      type: Socket
+  - name: docker-graph
+    emptyDir: {}
 """
         }
     }
