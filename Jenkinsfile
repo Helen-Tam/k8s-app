@@ -17,6 +17,7 @@ spec:
     volumeMounts:
     - name: workspace-volume
       mountPath: /home/jenkins/agent
+
   - name: docker
     image: docker:24-dind
     securityContext:
@@ -31,6 +32,16 @@ spec:
         mountPath: /var/lib/docker
       - name: workspace-volume
         mountPath: /home/jenkins/agent
+
+    - name: kubectl
+      image: bitnami/kubectl:latest
+      command:
+     -cat
+     tty: true
+     volumeMounts:
+       - name: workspace-volume
+         mountPath: /home/jenkins/agent
+
   volumes:
   - name: workspace-volume
     emptyDir: {}
@@ -85,7 +96,7 @@ spec:
 
         stage('Deploy to prod namespace') {
             steps {
-                container('jnlp') {
+                container('kubectl') {
                     sh """
                     kubectl apply -f k8s/prod/app-deployment.yaml -n ${env.PROD_NAMESPACE}
                     kubectl apply -f k8s/prod/app-service.yaml -n ${env.PROD_NAMESPACE}
@@ -96,7 +107,7 @@ spec:
 
         stage('Get the web-app URL') {
             steps {
-                container('jnlp') {
+                container('kubectl') {
                     sh "kubectl get svc -n ${env.PROD_NAMESPACE}"
                 }
             }
