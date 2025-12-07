@@ -49,6 +49,9 @@ spec:
     emptyDir: {}
   - name: docker-graph
     emptyDir: {}
+  - name: kubeconfig
+    hostPath:
+      path: /home/helen/.kube
 '''
         }
     }
