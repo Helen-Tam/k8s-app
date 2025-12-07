@@ -51,7 +51,7 @@ spec:
 
     environment {
         DOCKER_HUB_CREDS = 'dockerhub-credentials'
-        DOCKER_IMAGE = 'helentam93/k8s-app:latest'
+        DOCKER_IMAGE = 'docker.io/helentam93/k8s-app:latest'
         PROD_NAMESPACE = 'prod'
     }
 
