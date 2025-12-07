@@ -14,9 +14,6 @@ spec:
   - name: jnlp
     image: jenkins/inbound-agent:latest
     args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
-    env:
-      - name: DOCKER_HOST
-        value: tcp://docker:2375
     volumeMounts:
     - name: workspace-volume
       mountPath: /home/jenkins/agent
@@ -58,7 +55,7 @@ spec:
 
         stage('Login to Docker Hub') {
             steps {
-                container('jnlp') {
+                container('docker') {
                     withCredentials([usernamePassword(
                         credentialsId: env.DOCKER_HUB_CREDS,
                         usernameVariable: 'DOCKER_USER',
@@ -78,7 +75,7 @@ spec:
                         echo "Waiting for Docker daemon"
                         sleep 2
                     done
-                    
+
                     docker build -t ${DOCKER_IMAGE} .
                     docker push ${DOCKER_IMAGE}
                     """
