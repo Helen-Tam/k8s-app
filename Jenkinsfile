@@ -12,10 +12,11 @@ metadata:
 spec:
   containers:
   - name: jnlp
-    image: docker:24
-    command:
-    - cat
-    tty: true
+    image: jenkins/inbound-agent:latest
+    args: ['\$(JENKINS_SECRET)', '\$(JENKINS_NAME)']
+    env:
+      - name: DOCKER_HOST
+        value: unix:///var/run/dockr.sock
     volumeMounts:
     - name: workspace-volume
       mountPath: /home/jenkins/agent
