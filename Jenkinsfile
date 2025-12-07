@@ -17,6 +17,7 @@ spec:
     volumeMounts:
     - name: workspace-volume
       mountPath: /home/jenkins/agent
+
   - name: docker
     image: docker:24-dind
     securityContext:
@@ -24,21 +25,20 @@ spec:
     env:
       - name: DOCKER_TLS_CERTDIR
         value: ""
-    ports:
-      - containerPort: 2375
     volumeMounts:
       - name: docker-graph
         mountPath: /var/lib/docker
       - name: workspace-volume
         mountPath: /home/jenkins/agent
+        
     - name: kubectl
       image: bitnami/kubectl:latest
       command:
-     -cat
-     tty: true
-     volumeMounts:
-       - name: workspace-volume
-         mountPath: /home/jenkins/agent
+      -cat
+      tty: true
+      volumeMounts:
+        - name: workspace-volume
+          mountPath: /home/jenkins/agent
 
   volumes:
   - name: workspace-volume
