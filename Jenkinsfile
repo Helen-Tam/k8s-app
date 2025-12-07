@@ -1,43 +1,45 @@
 pipeline {
     agent {
         kubernetes {
-            label 'kaniko-agent'
+            label 'docker-agent'
             defaultContainer 'jnlp'
             yaml """
 apiVersion: v1
 kind: Pod
 metadata:
   labels:
-    app: kaniko-agent
+    app: jenkins-docker-agent
 spec:
   containers:
   - name: jnlp
     image: jenkins/inbound-agent:latest
+    env:
+      - name: DOCKER_HOST
+        value: tcp://localhost:2375
     volumeMounts:
     - name: workspace-volume
       mountPath: /home/jenkins/agent
-  - name: kaniko
-    image: gcr.io/kaniko-project/executor:latest
-    command:
-    - tail
-    - -f
-    - /dev/null
+  - name: docker
+    image: docker:24-dind
+    securityContext:
+      privileged: true
+    env:
+      - name: DOCKER_TLS_CERTDIR
+        value: ""
     volumeMounts:
-    - name: workspace-volume
-      mountPath: /workspace
-    - name: kaniko-secret
-      mountPath: /kaniko/.docker
+    - name: docker-graph
+      mountPath: /var/lib/dpcker
   volumes:
   - name: workspace-volume
     emptyDir: {}
-  - name: kaniko-secret
-    secret:
-      secretName: docker-config
+  - name: docker-graph
+    emptyDir: {}
 """
         }
     }
 
     environment {
+        DOCKER_HUB_CREDS = 'dockerhub-credentials'
         DOCKER_IMAGE = 'helentam93/k8s-app:latest'
         PROD_NAMESPACE = 'prod'
     }
@@ -49,15 +51,26 @@ spec:
             }
         }
 
-        stage('Build and push Docker image') {
+        stage('Login to Docker Hub') {
             steps {
-                container('kaniko') {
+                container('jnlp') {
+                    withCredentials([usernamePassword(
+                        credentialsId: env.DOCKER_HUB_CREDS,
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )]) {
+                        sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
+                    }
+                }
+            }
+        }
+
+        stage('Build and push the image') {
+            steps {
+                container('jnlp') {
                     sh """
-                    /kaniko/executor \
-                      --dockerfile=/workspace/Dockerfile \
-                      --context=/workspace \
-                      --destination=${DOCKER_IMAGE} \
-                      --skip-tls-verify
+                    docker build -t ${DOCKER_IMAGE} .
+                    docker push ${DOCKER_IMAGE}
                     """
                 }
             }
