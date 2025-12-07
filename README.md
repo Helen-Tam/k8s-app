@@ -1,4 +1,4 @@
-Project Name: Implementing Jenkins Service in Kubernetes
+Project Name: "Implementing Jenkins Service in Kubernetes"
 
 Goals to reach:
 1. Configure Jenkins service in Kubernetes in "devops" namespace
