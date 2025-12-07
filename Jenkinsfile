@@ -34,8 +34,7 @@ spec:
   - name: kubectl
     image: bitnami/kubectl:latest
     command:
-      - sleep
-      - "3600"
+      - cat
     volumeMounts:
       - name: workspace-volume
         mountPath: /home/jenkins/agent
