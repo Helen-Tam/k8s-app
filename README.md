@@ -24,8 +24,8 @@ Step-by-Step Implementation:
 4. Create "devops" and "prod" namespaces:
    - kubectl create namespace devops
    - kubectl create namespace prod
-5. Check the namespaces creation: kubectl get ns
-![Namespaces](images/get_ns.png)
+5. Check the namespaces creation: 
+   - kubectl get ns
 6. Create the following files in the k8s/devops directory:
    - jenkins-devops-rbac.yaml (Jenkins permissions in devops namespace)
    - jenkins-pvc.yaml (persistent storage for Jenkins controller)
