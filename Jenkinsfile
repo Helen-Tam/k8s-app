@@ -98,7 +98,6 @@ spec:
                 container('kubectl') {
                     sh 'kubectl version --client'
                     sh 'ls -R k8s/prod'
-                    sh 'kubectl get nodes --kubeconfig /home/jenkins/.kube/config'
                 }
             }
         }
