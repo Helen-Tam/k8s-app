@@ -50,7 +50,6 @@ spec:
     }
 
     environment {
-        DOCKER_HUB_CREDS = 'dockerhub-creds'
         DOCKER_IMAGE = 'docker.io/helentam93/k8s-app:latest'
         PROD_NAMESPACE = 'prod'
     }
@@ -70,24 +69,19 @@ spec:
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_PASS'
                     )]) {
-                        sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
+                        sh """ 
+                        echo "Waiting for Docker daemon..."
+                        until docker info >/dev/null 2>&1; do
+                            sleep 2
+                        done
+                        echo "Logging into Docker Hub..."
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        echo "Building image..."
+                        docker build -t ${DOCKER_IMAGE} .
+                        echo "Pushing image..."
+                        docker push ${DOCKER_IMAGE}
+                        """
                     }
-                }
-            }
-        }
-
-        stage('Build and push the image') {
-            steps {
-                container('docker') {
-                    sh """
-                    until docker info >/dev/null 2>&1; do
-                        echo "Waiting for Docker daemon"
-                        sleep 2
-                    done
-
-                    docker build -t ${DOCKER_IMAGE} .
-                    docker push ${DOCKER_IMAGE}
-                    """
                 }
             }
         }
