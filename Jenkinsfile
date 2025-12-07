@@ -33,10 +33,7 @@ spec:
         mountPath: /home/jenkins/agent
 
   - name: kubectl
-    image: bitnami/kubectl:latest
-    command:
-      - sleep
-      - "99d"
+    image: sashak9/pod-agent:latest
     tty: true
     volumeMounts:
       - name: kubeconfig
