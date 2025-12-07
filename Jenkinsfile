@@ -34,8 +34,8 @@ spec:
   - name: kubectl
     image: bitnami/kubectl:latest
     command:
-      - cat
-    tty: true
+      - sleep
+      - "3600"
     volumeMounts:
       - name: workspace-volume
         mountPath: /home/jenkins/agent
@@ -69,7 +69,7 @@ spec:
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_PASS'
                     )]) {
-                        sh """ 
+                        sh """
                         echo "Waiting for Docker daemon..."
                         until docker info >/dev/null 2>&1; do
                             sleep 2
@@ -90,8 +90,10 @@ spec:
             steps {
                 container('kubectl') {
                     sh """
+                    set -e
                     kubectl apply -f k8s/prod/app-deployment.yaml -n ${env.PROD_NAMESPACE}
                     kubectl apply -f k8s/prod/app-service.yaml -n ${env.PROD_NAMESPACE}
+                    kubectl rollout status deployment/app-deployment -n ${PROD_NAMESPACE} --timeout=120s
                     """
                 }
             }
