@@ -39,6 +39,8 @@ spec:
       - "99d"
     tty: true
     volumeMounts:
+      - name: kubeconfig
+        mountPath: /home/jenkins/.kube
       - name: workspace-volume
         mountPath: /home/jenkins/agent
 
@@ -93,6 +95,7 @@ spec:
                 container('kubectl') {
                     sh 'kubectl version --client'
                     sh 'ls -R k8s/prod'
+                    sh 'kubectl get nodes --kubeconfig /home/jenkins/.kube/config'
                 }
             }
         }
