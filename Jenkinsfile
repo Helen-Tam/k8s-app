@@ -18,9 +18,6 @@ spec:
       mountPath: /home/jenkins/agent
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
-    command:
-    - cat
-    tty: true
     volumeMounts:
     - name: workspace-volume
       mountPath: /workspace
