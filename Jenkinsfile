@@ -62,7 +62,7 @@ spec:
                         kubectl create secret docker-registry docker-config \
                           --docker-username=$DOCKER_USER \
                           --docker-password=$DOCKER_PASS \
-                          --docker-server=http://index.docker.io/v1/ \
+                          --docker-server=https://index.docker.io/v1/ \
                           -n ${DEV_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
                         """
                     }
