@@ -17,7 +17,6 @@ spec:
     volumeMounts:
     - name: workspace-volume
       mountPath: /home/jenkins/agent
-
   - name: docker
     image: docker:24-dind
     securityContext:
@@ -32,7 +31,6 @@ spec:
         mountPath: /var/lib/docker
       - name: workspace-volume
         mountPath: /home/jenkins/agent
-
     - name: kubectl
       image: bitnami/kubectl:latest
       command:
