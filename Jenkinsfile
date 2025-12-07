@@ -86,6 +86,14 @@ spec:
             }
         }
 
+        stage('Check deployment files') {
+            steps {
+                container('kubectl') {
+                    sh 'ls -R k8s/prod'
+                }
+            }
+        }
+        
         stage('Deploy to prod namespace') {
             steps {
                 container('kubectl') {
